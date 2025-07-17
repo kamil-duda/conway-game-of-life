@@ -3,6 +3,7 @@
 ## Resources
 
 - [Ebitengine - Cheat Sheet](https://ebitengine.org/en/documents/cheatsheet.html)
+- [Ebitengine - Package Documentation](https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2)
 
 ## To do
 
@@ -26,6 +27,7 @@
 - [ ] Mouse drag to toggle multiple cells
 - [ ] Reset button
 - [ ] Clear grid button
+- [ ] FPS
 - [ ] Generation counter display
 - [ ] Population counter display
 - [ ] Slider for speed control

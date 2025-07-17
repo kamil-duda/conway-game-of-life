@@ -13,7 +13,7 @@ func (g *GameOfLife) Update() error {
 }
 
 func (g *GameOfLife) Draw(screen *ebiten.Image) {
-	draw.DrawSquare(screen)
+	draw.Background(screen)
 }
 
 func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
