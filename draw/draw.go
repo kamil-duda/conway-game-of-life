@@ -7,8 +7,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
+func Pixel(x int, y int, screen *ebiten.Image) {
+	screen.Set(x, y, color.White)
+}
+
 func Square(screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, 10, 10, 10, 10, color.White, true)
+	vector.DrawFilledRect(screen, 10, 10, 10, 10, color.White, false)
 }
 
 func Background(screen *ebiten.Image) {
