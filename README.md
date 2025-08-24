@@ -7,52 +7,28 @@
 
 ## To do
 
-### Core
-
-- [x] Project structure setup - go modules, basic files
-- [x] Draw window with square - basic Ebiten window setup
-- [ ] Divide background into cells - grid system
-- [ ] Cell-to-pixel coordinate translation system
-- [ ] Basic cell rendering - draw alive/dead cells
-- [ ] Screen configuration from external config - YAML config file
-- [ ] Game state data structure - 2D grid/array for cells
-- [ ] Game of Life rules implementation - birth, survival, death rules
-- [ ] Game logic working on cells not pixels - abstract cell operations
-- [ ] Update function to update state - game loop logic
-
-### User Interface and Interaction
-
-- [ ] Play and pause functionality
-- [ ] Clicking on cells toggles live/dead state
-- [ ] Mouse drag to toggle multiple cells
+- [ ] Display the Game of Life cell as a minimal rectangle
+- [ ] Store universe in a set (hash map) with coordinates as keys
+- [ ] Check only cells that have potential to change in the next generation
+- [ ] Implement the Game of Life rules
+- [ ] Render without grid and scaling
+- [ ] FPS counter
+- [ ] Generation counter
 - [ ] Reset button
-- [ ] Clear grid button
-- [ ] FPS
-- [ ] Generation counter display
-- [ ] Population counter display
-- [ ] Slider for speed control
-- [ ] Toolbox with pre-made patterns - glider, blinker, etc.
-- [ ] Pattern placement system
-- [ ] Save/load grid states to a file
-- [ ] Grid lines toggle
-
-### Improvements
-
-- [ ] Resizing working - dynamic window resizing
-- [ ] Zoom in/out functionality
-- [ ] Pan/scroll the grid
-- [ ] Performance optimization - only update changed regions
-- [ ] Shader-based rendering for better performance
-
-### Code Quality
-
-- [ ] Unit tests for game logic
-- [ ] Integration tests for UI interactions
-- [ ] Performance benchmarks in Go
-- [ ] Code documentation
-
-### CI/CD & Build
-
+- [ ] Play/pause button
+- [ ] Clicking on cells to toggle their state - create/kill cells
+- [ ] Mouse drag to create/kill multiple cells
+- [ ] Optimize performance
+- [ ] Configurable cell size
+- [ ] Zooming
+- [ ] Panning with mouse and arrow keys
+- [ ] Render grid lines
+- [ ] Toggle grid lines
+- [ ] Saving and loading to a file
+- [ ] Toolbox with pre-made patterns
+- [ ] Pattern placement system with validation
+- [ ] Speed slider
+- [ ] Shader based rendering
 - [ ] GitHub Actions workflow for tests, build, benchmarks
 - [ ] Cross-platform build - windows, macOS, Linux
 - [ ] Release automation with GitHub releases
