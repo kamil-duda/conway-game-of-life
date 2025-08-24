@@ -1,124 +1,135 @@
 package conway
 
 import (
+	"math"
 	"reflect"
 	"testing"
 )
 
 func TestNewUniverseNotNil(t *testing.T) {
+	t.Parallel()
 	got := New()
-
 	if got == nil {
 		t.Error("New() returned nil, want non-nil Universe")
 	}
 }
 
-func TestNewUniverseEmptyGrid(t *testing.T) {
-	got := len(New().grid)
+func TestNewUniverseEmpty(t *testing.T) {
+	t.Parallel()
+	got := len(New().liveCells)
 	want := 0
-
 	if got != want {
-		t.Errorf("Got Grid of length %v, but want %v", got, want)
+		t.Errorf("Got some live cells %v, but want %v", got, want)
 	}
 }
 
-var universeTestCases = []struct {
-	name    string
-	initial Grid
-	want    Grid
+var testToKeyCases = []struct {
+	name string
+	x, y int
+	want uint64
 }{
-	{name: "underpopulation - 0 neighbours",
-		initial: Grid{
-			{false, false, false},
-			{false, true, false},
-			{false, false, false},
-		},
-		want: Grid{
-			{false, false, false},
-			{false, false, false},
-			{false, false, false},
-		},
-	},
-	{name: "underpopulation - 1 neighbour",
-		initial: Grid{
-			{false, false, false},
-			{false, true, true},
-			{false, false, false},
-		},
-		want: Grid{
-			{false, false, false},
-			{false, false, false},
-			{false, false, false},
-		},
-	},
-	{name: "survive - 2 neighbours - horizontal",
-		initial: Grid{
-			{false, false, false},
-			{true, true, true},
-			{false, false, false},
-		},
-		want: Grid{
-			{false, false, false},
-			{false, true, false},
-			{false, false, false},
-		},
-	},
-	{name: "survive - 2 neighbours - vertical",
-		initial: Grid{
-			{false, true, false},
-			{false, true, false},
-			{false, true, false},
-		},
-		want: Grid{
-			{false, false, false},
-			{false, true, false},
-			{false, false, false},
-		},
-	},
-	{name: "survive - 2 neighbours - diagonal A",
-		initial: Grid{
-			{true, false, false},
-			{false, true, false},
-			{false, false, true},
-		},
-		want: Grid{
-			{false, false, false},
-			{false, true, false},
-			{false, false, false},
-		},
-	},
-	{name: "survive - 2 neighbours - diagonal B",
-		initial: Grid{
-			{false, false, true},
-			{false, true, false},
-			{true, false, false},
-		},
-		want: Grid{
-			{false, false, false},
-			{false, true, false},
-			{false, false, false},
-		},
-	},
+	{"(0, 0) is 0", 0, 0, 0},
+	{"(0, -0) is 0", 0, -0, 0},
+	{"(-0, 0) is 0", -0, 0, 0},
+	{"(-0, -0) is 0", -0, -0, 0},
+	{"(0, 1) is 1", 0, 1, 1},
+	{"(1, 0) is 0x0000000100000000", 1, 0, 0x0000000100000000},
+	{"(1, 1) is 0x0000000100000001", 1, 1, 0x0000000100000001},
+	{"(0, -1) is 0x00000000FFFFFFFF", 0, -1, 0x00000000FFFFFFFF},
+	{"(-1, 0) is 0xFFFFFFFF00000000", -1, 0, 0xFFFFFFFF00000000},
+	{"(-1, -1) is 0xFFFFFFFFFFFFFFFF", -1, -1, 0xFFFFFFFFFFFFFFFF},
+	{"(max, max) is 0x7FFFFFFF7FFFFFFF", math.MaxInt32, math.MaxInt32, 0x7FFFFFFF7FFFFFFF},
+	{"(min, min) is 0x1000000010000000", math.MinInt32, math.MinInt32, 0x8000000080000000},
 }
 
-func TestUniverseRules(t *testing.T) {
+func TestToKey(t *testing.T) {
 	t.Parallel()
-	for _, test := range universeTestCases {
-		t.Run(test.name, func(t *testing.T) {
+	for _, tt := range testToKeyCases {
+		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			universe := Universe{test.initial}
-			universe.Update()
-			got := universe.grid
-			if !reflect.DeepEqual(got, test.want) {
-				t.Errorf("Got %v, want %v", got, test.want)
+			got := toKey(tt.x, tt.y)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Got %v, want %v", got, tt.want)
 			}
 		})
 	}
-
 }
 
-func BenchmarkUniverse(b *testing.B) {
+var isLiveTestCases = []struct {
+	name      string
+	liveCells grid
+	query     uint64
+	want      bool
+}{
+	{"empty universe", make(grid), toKey(0, 0), false},
+	{"non-empty universe, live", map[uint64]bool{toKey(0, 0): true}, toKey(0, 0), true},
+	{"non-empty universe, dead", map[uint64]bool{toKey(1, 1): true}, toKey(0, 0), false},
+}
+
+func TestIsLive(t *testing.T) {
+	t.Parallel()
+	for _, tt := range isLiveTestCases {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			universe := Universe{tt.liveCells}
+			got := universe.IsLive(0, 0)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+var setLiveTestCases = []struct {
+	name      string
+	liveCells grid
+	x, y      int
+	want      grid
+}{
+	{"empty universe", make(grid), 0, 0, map[uint64]bool{toKey(0, 0): true}},
+	{"non-empty universe, same cell", map[uint64]bool{toKey(0, 0): true}, 0, 0, map[uint64]bool{toKey(0, 0): true}},
+	{"non-empty universe, different cell", map[uint64]bool{toKey(0, 0): true}, 1, 1, map[uint64]bool{toKey(0, 0): true, toKey(1, 1): true}},
+}
+
+func TestSetLive(t *testing.T) {
+	t.Parallel()
+	for _, tt := range setLiveTestCases {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			universe := Universe{tt.liveCells}
+			universe.SetLive(tt.x, tt.y)
+			got := universe.liveCells
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func BenchmarkNewUniverse(b *testing.B) {
 	for b.Loop() {
 		New()
+	}
+}
+
+func BenchmarkToKey(b *testing.B) {
+	for b.Loop() {
+		toKey(0, 0)
+	}
+}
+
+func BenchmarkIsLive(b *testing.B) {
+	u := Universe{map[uint64]bool{toKey(0, 0): true}}
+	for b.Loop() {
+		u.IsLive(0, 0)
+		u.IsLive(1, 1)
+	}
+}
+
+func BenchmarkSetLive(b *testing.B) {
+	u := Universe{map[uint64]bool{toKey(0, 0): true}}
+	for b.Loop() {
+		u.SetLive(0, 0)
+		u.SetLive(1, 1)
 	}
 }
