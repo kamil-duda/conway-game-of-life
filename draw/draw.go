@@ -8,11 +8,11 @@ import (
 )
 
 func Pixel(x int, y int, screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, float32(x), float32(y), 1, 1, color.White, false)
+	screen.Set(x, y, color.White)
 }
 
 func Square(screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, 10, 10, 10, 10, color.White, true)
+	vector.DrawFilledRect(screen, 10, 10, 10, 10, color.White, false)
 }
 
 func Background(screen *ebiten.Image) {

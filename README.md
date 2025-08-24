@@ -11,7 +11,9 @@ Available commands:
 
 ## Project Management
 
-Project management using GitHub Projects: https://github.com/users/kamil-duda/projects/2
+Project management using GitHub Projects
+* [Conway's Game of Life - GitHub Project](https://github.com/users/kamil-duda/projects/2)
+* [GitHub Issues](https://github.com/kamil-duda/conway-game-of-life/issues) 
 
 ## Resources
 
