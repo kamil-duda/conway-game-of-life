@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
-# run all found benchmarks
-# -bench .
-# look for benchmarks in all directories
-# ./...
+# -v (verbose)
+# -bench . (run all found benchmarks)
+# ./... (look for benchmarks in all directories)
 go test -v -bench . -benchmem ./...

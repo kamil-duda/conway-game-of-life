@@ -19,6 +19,7 @@
 - [ ] Clicking on cells to toggle their state - create/kill cells
 - [ ] Mouse drag to create/kill multiple cells
 - [ ] Optimize performance
+- [ ] Configurable cell size
 - [ ] Zooming
 - [ ] Panning with mouse and arrow keys
 - [ ] Render grid lines
