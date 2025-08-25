@@ -9,10 +9,12 @@ type GameOfLife struct {
 }
 
 func (g *GameOfLife) Update() error {
+
 	return nil
 }
 
 func (g *GameOfLife) Draw(screen *ebiten.Image) {
+	draw.DebugBackground(screen)
 	draw.Pixel(0, 0, screen)
 	draw.Pixel(5, 5, screen)
 	draw.Pixel(10, 10, screen)

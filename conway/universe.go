@@ -10,15 +10,55 @@ func New() *Universe {
 	return new(Universe)
 }
 
-func (universe *Universe) IsLive(x, y int) bool {
+func (universe *Universe) isLive(x, y int) bool {
 	key := toKey(x, y)
 	_, exists := universe.liveCells[key]
 	return exists
 }
 
-func (universe *Universe) SetLive(x, y int) {
+func (universe *Universe) setLive(x, y int) {
 	key := toKey(x, y)
 	universe.liveCells[key] = true
+}
+
+func (universe *Universe) setDead(x, y int) {
+	delete(universe.liveCells, toKey(x, y))
+}
+
+func (universe *Universe) liveNeighbours(x, y int) (count uint8) {
+	// NW
+	if universe.isLive(x-1, y-1) {
+		count++
+	}
+	// W
+	if universe.isLive(x-1, y) {
+		count++
+	}
+	// SW
+	if universe.isLive(x-1, y+1) {
+		count++
+	}
+	// NE
+	if universe.isLive(x+1, y-1) {
+		count++
+	}
+	// E
+	if universe.isLive(x+1, y) {
+		count++
+	}
+	// SE
+	if universe.isLive(x+1, y+1) {
+		count++
+	}
+	// N
+	if universe.isLive(x, y-1) {
+		count++
+	}
+	// S
+	if universe.isLive(x, y+1) {
+		count++
+	}
+	return count
 }
 
 func toKey(x, y int) uint64 {
