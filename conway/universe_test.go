@@ -48,7 +48,7 @@ func TestToKey(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got := toKey(tt.x, tt.y)
-			if !reflect.DeepEqual(got, tt.want) {
+			if got != tt.want {
 				t.Errorf("Got %v, want %v", got, tt.want)
 			}
 		})
@@ -72,8 +72,8 @@ func TestIsLive(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			universe := Universe{tt.liveCells}
-			got := universe.IsLive(0, 0)
-			if !reflect.DeepEqual(got, tt.want) {
+			got := universe.isLive(0, 0)
+			if got != tt.want {
 				t.Errorf("Got %v, want %v", got, tt.want)
 			}
 		})
@@ -97,9 +97,108 @@ func TestSetLive(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			universe := Universe{tt.liveCells}
-			universe.SetLive(tt.x, tt.y)
+			universe.setLive(tt.x, tt.y)
 			got := universe.liveCells
 			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+var setDeadTestCases = []struct {
+	name      string
+	liveCells grid
+	x, y      int
+	want      grid
+}{
+	{"empty universe", make(grid), 0, 0, make(grid)},
+	{"non-empty universe, same cell", map[uint64]bool{toKey(0, 0): true}, 0, 0, make(grid)},
+	{"non-empty universe, different cell", map[uint64]bool{toKey(0, 0): true}, 1, 1, map[uint64]bool{toKey(0, 0): true}},
+}
+
+func TestSetDead(t *testing.T) {
+	t.Parallel()
+	for _, tt := range setDeadTestCases {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			universe := Universe{tt.liveCells}
+			universe.setDead(tt.x, tt.y)
+			got := universe.liveCells
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+var setLiveNeighboursCases = []struct {
+	name      string
+	liveCells grid
+	x, y      int
+	want      uint8
+}{
+	{"empty universe", make(grid), 0, 0, 0},
+	{"one neighbour", map[uint64]bool{toKey(-1, 0): true}, 0, 0, 1},
+	{"two neighbours", map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+	}, 0, 0, 2},
+	{"three neighbours", map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+		toKey(-1, 1):  true,
+	}, 0, 0, 3},
+	{"four neighbours", map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+		toKey(-1, 1):  true,
+		toKey(0, 1):   true,
+	}, 0, 0, 4},
+	{"five neighbours", map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+		toKey(-1, 1):  true,
+		toKey(0, 1):   true,
+		toKey(0, -1):  true,
+	}, 0, 0, 5},
+	{"six neighbours", map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+		toKey(-1, 1):  true,
+		toKey(0, 1):   true,
+		toKey(0, -1):  true,
+		toKey(1, 0):   true,
+	}, 0, 0, 6},
+	{"seven neighbours", map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+		toKey(-1, 1):  true,
+		toKey(0, 1):   true,
+		toKey(0, -1):  true,
+		toKey(1, 0):   true,
+		toKey(1, 1):   true},
+		0, 0, 7},
+	{"eight neighbours", map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+		toKey(-1, 1):  true,
+		toKey(0, 1):   true,
+		toKey(0, -1):  true,
+		toKey(1, 0):   true,
+		toKey(1, 1):   true,
+		toKey(1, -1):  true},
+		0, 0, 8},
+}
+
+func TestLiveNeighbours(t *testing.T) {
+	t.Parallel()
+	for _, tt := range setLiveNeighboursCases {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			universe := Universe{tt.liveCells}
+			got := universe.liveNeighbours(tt.x, tt.y)
+			if got != tt.want {
 				t.Errorf("Got %v, want %v", got, tt.want)
 			}
 		})
@@ -121,15 +220,35 @@ func BenchmarkToKey(b *testing.B) {
 func BenchmarkIsLive(b *testing.B) {
 	u := Universe{map[uint64]bool{toKey(0, 0): true}}
 	for b.Loop() {
-		u.IsLive(0, 0)
-		u.IsLive(1, 1)
+		u.isLive(0, 0)
 	}
 }
 
 func BenchmarkSetLive(b *testing.B) {
 	u := Universe{map[uint64]bool{toKey(0, 0): true}}
 	for b.Loop() {
-		u.SetLive(0, 0)
-		u.SetLive(1, 1)
+		u.setLive(1, 1)
+	}
+}
+
+func BenchmarkLiveNeighbours(b *testing.B) {
+	u := Universe{map[uint64]bool{
+		toKey(-1, -1): true,
+		toKey(-1, 0):  true,
+		toKey(-1, 1):  true,
+		toKey(0, 1):   true,
+		toKey(0, -1):  true,
+		toKey(1, 0):   true,
+		toKey(1, 1):   true,
+		toKey(1, -1):  true}}
+	for b.Loop() {
+		u.liveNeighbours(0, 0)
+	}
+}
+
+func BenchmarkSetDead(b *testing.B) {
+	u := Universe{map[uint64]bool{toKey(0, 0): true}}
+	for b.Loop() {
+		u.setDead(0, 0)
 	}
 }
