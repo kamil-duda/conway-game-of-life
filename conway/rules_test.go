@@ -2,7 +2,7 @@ package conway
 
 import "testing"
 
-var checkLiveTestCases = []struct {
+var liveCellSurvivesTestCases = []struct {
 	name       string
 	neighbours uint8
 	expected   bool
@@ -18,20 +18,20 @@ var checkLiveTestCases = []struct {
 	{"8 neighbours - dies", 8, false},
 }
 
-func TestCheckLiveCell(t *testing.T) {
+func TestLiveCellSurvives(t *testing.T) {
 	t.Parallel()
-	for _, tt := range checkLiveTestCases {
+	for _, tt := range liveCellSurvivesTestCases {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := checkLiveCell(tt.neighbours)
+			result := LiveCellSurvives(tt.neighbours)
 			if result != tt.expected {
-				t.Errorf("checkLiveCell(%d) = %v, want %v", tt.neighbours, result, tt.expected)
+				t.Errorf("LiveCellSurvives(%d) = %v, want %v", tt.neighbours, result, tt.expected)
 			}
 		})
 	}
 }
 
-var checkDeadTestCases = []struct {
+var deadCellRevivesTestCases = []struct {
 	name       string
 	neighbours uint8
 	expected   bool
@@ -47,33 +47,33 @@ var checkDeadTestCases = []struct {
 	{"8 neighbours - stays dead", 8, false},
 }
 
-func TestCheckDeadCell(t *testing.T) {
+func TestDeadCellRevives(t *testing.T) {
 	t.Parallel()
-	for _, tt := range checkDeadTestCases {
+	for _, tt := range deadCellRevivesTestCases {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := checkDeadCell(tt.neighbours)
+			result := DeadCellRevives(tt.neighbours)
 			if result != tt.expected {
-				t.Errorf("checkDeadCell(%d) = %v, want %v", tt.neighbours, result, tt.expected)
+				t.Errorf("DeadCellRevives(%d) = %v, want %v", tt.neighbours, result, tt.expected)
 			}
 		})
 	}
 }
 
-func BenchmarkCheckLiveCell(b *testing.B) {
+func BenchmarkLiveCellSurvives(b *testing.B) {
 	for b.Loop() {
-		checkLiveCell(1)
-		checkLiveCell(2)
-		checkLiveCell(3)
-		checkLiveCell(4)
+		LiveCellSurvives(1)
+		LiveCellSurvives(2)
+		LiveCellSurvives(3)
+		LiveCellSurvives(4)
 	}
 }
 
-func BenchmarkCheckDeadCell(b *testing.B) {
+func BenchmarkDeadCellRevives(b *testing.B) {
 	for b.Loop() {
-		checkDeadCell(1)
-		checkDeadCell(2)
-		checkDeadCell(3)
-		checkDeadCell(4)
+		DeadCellRevives(1)
+		DeadCellRevives(2)
+		DeadCellRevives(3)
+		DeadCellRevives(4)
 	}
 }

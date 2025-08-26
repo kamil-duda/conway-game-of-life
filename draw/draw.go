@@ -11,13 +11,9 @@ func Pixel(x int, y int, screen *ebiten.Image) {
 	screen.Set(x, y, color.White)
 }
 
-func Square(screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, 10, 10, 10, 10, color.White, false)
-}
-
 func DebugBackground(screen *ebiten.Image) {
-	vector.StrokeLine(screen, 1, -100, 1, 100, 1, color.RGBA{R: 255}, false)
-	vector.StrokeLine(screen, -100, 1, 100, 1, 1, color.RGBA{R: 255}, false)
+	vector.StrokeLine(screen, 1, -200, 1, 200, 1, color.RGBA{R: 255, A: 64}, false)
+	vector.StrokeLine(screen, -200, 1, 200, 1, 1, color.RGBA{R: 255, A: 64}, false)
 }
 
 func Background(screen *ebiten.Image) {

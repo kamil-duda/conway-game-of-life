@@ -1,13 +1,22 @@
-package conway
+package game
 
-type grid = map[uint64]bool
+import (
+	"iter"
+	"maps"
+)
+
+type cells = map[uint64]Cell
 
 type Universe struct {
-	liveCells grid
+	liveCells cells
 }
 
-func New() *Universe {
-	return new(Universe)
+func New(cellz ...Cell) *Universe {
+	u := &Universe{make(cells)}
+	for _, cell := range cellz {
+		u.setLive(cell.x, cell.y)
+	}
+	return u
 }
 
 func (universe *Universe) isLive(x, y int) bool {
@@ -18,7 +27,7 @@ func (universe *Universe) isLive(x, y int) bool {
 
 func (universe *Universe) setLive(x, y int) {
 	key := toKey(x, y)
-	universe.liveCells[key] = true
+	universe.liveCells[key] = Cell{x, y}
 }
 
 func (universe *Universe) setDead(x, y int) {
@@ -63,4 +72,12 @@ func (universe *Universe) liveNeighbours(x, y int) (count uint8) {
 
 func toKey(x, y int) uint64 {
 	return uint64(uint32(x))<<32 | uint64(uint32(y))
+}
+
+func (universe *Universe) cellsIter() iter.Seq[Cell] {
+	return maps.Values(universe.liveCells)
+}
+
+func (universe *Universe) clone() *Universe {
+	return &Universe{maps.Clone(universe.liveCells)}
 }

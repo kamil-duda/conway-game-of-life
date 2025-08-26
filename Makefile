@@ -7,7 +7,13 @@ run:
 
 test:
 	# -v (verbose)
+	# ./... (look for tests in all directories)
+	go test -v ./...
+
+bench:
+	# -v (verbose)
 	# -bench . (run all found benchmarks)
+	# -benchmem (show memory allocation stats)
 	# ./... (look for benchmarks in all directories)
 	go test -v -bench . -benchmem ./...
 

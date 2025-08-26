@@ -4,13 +4,15 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kamil-duda/conway-game-of-life/config"
+	"github.com/kamil-duda/conway-game-of-life/game"
 )
 
 func main() {
-	ebiten.SetWindowTitle("Conway's Game of Life")
-	ebiten.SetWindowSize(800, 600)
+	ebiten.SetWindowTitle(config.Title)
+	ebiten.SetWindowSize(config.Width, config.Height)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
-	if err := ebiten.RunGame(&GameOfLife{}); err != nil {
+	if err := ebiten.RunGame(game.NewRandom(config.LogicalWidth, config.LogicalHeight)); err != nil {
 		log.Fatal(err)
 	}
 }
