@@ -2,8 +2,8 @@ package config
 
 const (
 	Title         = "Conway's Game of Life"
-	Width         = 800
-	Height        = 600
-	LogicalWidth  = 40
-	LogicalHeight = 30
+	Width         = 1024
+	Height        = 768
+	LogicalWidth  = 102
+	LogicalHeight = 76
 )
