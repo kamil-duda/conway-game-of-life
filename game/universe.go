@@ -77,3 +77,7 @@ func toKey(x, y int) uint64 {
 func (universe *Universe) cellsIter() iter.Seq[Cell] {
 	return maps.Values(universe.liveCells)
 }
+
+func (universe *Universe) clone() *Universe {
+	return &Universe{maps.Clone(universe.liveCells)}
+}

@@ -256,6 +256,32 @@ func TestCellsIter(t *testing.T) {
 	}
 }
 
+func TestClone(t *testing.T) {
+	t.Parallel()
+
+	cells := []Cell{
+		{-1, -1}, {-1, 0}, {-1, 1},
+		{0, -1}, {0, 1},
+		{1, -1}, {1, 0}, {1, 1},
+	}
+	original := New(cells...)
+	cloned := original.clone()
+
+	if original == cloned {
+		t.Errorf("clone() returned same Universe pointer %p, want different pointer", original)
+	}
+
+	if &original.liveCells == &cloned.liveCells {
+		t.Errorf("clone() shares same liveCells map pointer %p, want different pointer", &original.liveCells)
+	}
+
+	for cell := range original.cellsIter() {
+		if !cloned.isLive(cell.x, cell.y) {
+			t.Errorf("cloned universe missing cell (%d, %d)", cell.x, cell.y)
+		}
+	}
+}
+
 func BenchmarkNewUniverse(b *testing.B) {
 	for b.Loop() {
 		New()
@@ -318,5 +344,21 @@ func BenchmarkCellsIter(b *testing.B) {
 	)
 	for b.Loop() {
 		u.cellsIter()
+	}
+}
+
+func BenchmarkClone(b *testing.B) {
+	u := New(
+		Cell{-1, -1},
+		Cell{-1, 0},
+		Cell{-1, 1},
+		Cell{0, 1},
+		Cell{0, -1},
+		Cell{1, 0},
+		Cell{1, 1},
+		Cell{1, -1},
+	)
+	for b.Loop() {
+		u.clone()
 	}
 }
