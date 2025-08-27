@@ -1,6 +1,9 @@
 mod:
 	go mod tidy
-	go mod vendor
+
+update:
+	go get -u
+	make mod
 
 run:
 	go run .
@@ -28,3 +31,4 @@ coverage:
 		-o coverage.html
 	rm coverage.out
 	open coverage.html
+
