@@ -1,24 +1,31 @@
 package game
 
 import (
+	"bytes"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/kamil-duda/conway-game-of-life/config"
 	"github.com/kamil-duda/conway-game-of-life/conway"
-	"github.com/kamil-duda/conway-game-of-life/draw"
+	"golang.org/x/image/font/gofont/gomono"
 )
 
 type GameOfLife struct {
 	universe *Universe
+	canvas   *gameCanvas
 }
 
-func (g *GameOfLife) Update() error {
-	nextUniverse := g.universe.clone()
+type FpsCounter struct {
+	frames uint
+}
+
+func (game *GameOfLife) Update() error {
+	nextUniverse := game.universe.clone()
 	for x := 0; x < config.LogicalWidth; x++ {
-		for y := 0; y < config.Height; y++ {
-			neighbours := g.universe.liveNeighbours(x, y)
-			if g.universe.isLive(x, y) {
+		for y := 0; y < config.LogicalHeight; y++ {
+			neighbours := game.universe.liveNeighbours(x, y)
+			if game.universe.isLive(x, y) {
 				if !conway.LiveCellSurvives(neighbours) {
 					nextUniverse.setDead(x, y)
 				}
@@ -29,19 +36,32 @@ func (g *GameOfLife) Update() error {
 			}
 		}
 	}
-	g.universe = nextUniverse
+	game.universe = nextUniverse
 	return nil
 }
 
-func (g *GameOfLife) Draw(screen *ebiten.Image) {
-	for cell := range g.universe.cellsIter() {
-		draw.Pixel(cell.x, cell.y, screen)
+func (game *GameOfLife) Draw(screen *ebiten.Image) {
+	game.canvas.clear()
+	for cell := range game.universe.cellsIter() {
+		game.canvas.pixel(cell.x, cell.y)
 	}
-	draw.DebugBackground(screen)
+	game.canvas.drawOnto(screen)
+
+	fontSource, err := text.NewGoTextFaceSource(bytes.NewReader(gomono.TTF))
+	if err != nil {
+		panic(err)
+	}
+	face := &text.GoTextFace{
+		Source: fontSource,
+		Size:   24,
+	}
+	op := &text.DrawOptions{}
+	op.GeoM.Translate(0, 0)
+	text.Draw(screen, "Conway's Game of Life", face, op)
 }
 
-func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return config.LogicalWidth, config.LogicalHeight
+func (game *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+	return outsideWidth, outsideHeight
 }
 
 func NewRandom(sizeX, sizeY int) *GameOfLife {
@@ -53,5 +73,6 @@ func NewRandom(sizeX, sizeY int) *GameOfLife {
 			}
 		}
 	}
-	return &GameOfLife{universe}
+	gameBuffer := newCanvas(sizeX, sizeY)
+	return &GameOfLife{universe, gameBuffer}
 }
