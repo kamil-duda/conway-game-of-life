@@ -1,31 +1,28 @@
 package game
 
 import (
-	"bytes"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/kamil-duda/conway-game-of-life/config"
 	"github.com/kamil-duda/conway-game-of-life/conway"
-	"golang.org/x/image/font/gofont/gomono"
 )
 
 type GameOfLife struct {
-	universe *Universe
+	universe *universe
 	canvas   *gameCanvas
 }
 
-type FpsCounter struct {
+type fpsCounter struct {
 	frames uint
 }
 
-func (game *GameOfLife) Update() error {
-	nextUniverse := game.universe.clone()
+func (g *GameOfLife) Update() error {
+	nextUniverse := g.universe.clone()
 	for x := 0; x < config.LogicalWidth; x++ {
 		for y := 0; y < config.LogicalHeight; y++ {
-			neighbours := game.universe.liveNeighbours(x, y)
-			if game.universe.isLive(x, y) {
+			neighbours := g.universe.liveNeighbours(x, y)
+			if g.universe.isLive(x, y) {
 				if !conway.LiveCellSurvives(neighbours) {
 					nextUniverse.setDead(x, y)
 				}
@@ -36,36 +33,36 @@ func (game *GameOfLife) Update() error {
 			}
 		}
 	}
-	game.universe = nextUniverse
+	g.universe = nextUniverse
 	return nil
 }
 
-func (game *GameOfLife) Draw(screen *ebiten.Image) {
-	game.canvas.clear()
-	for cell := range game.universe.cellsIter() {
-		game.canvas.pixel(cell.x, cell.y)
+func (g *GameOfLife) Draw(screen *ebiten.Image) {
+	g.canvas.clear()
+	for cell := range g.universe.cellsIter() {
+		g.canvas.pixel(cell.x, cell.y)
 	}
-	game.canvas.drawOnto(screen)
+	g.canvas.drawOnto(screen)
 
-	fontSource, err := text.NewGoTextFaceSource(bytes.NewReader(gomono.TTF))
-	if err != nil {
-		panic(err)
-	}
-	face := &text.GoTextFace{
-		Source: fontSource,
-		Size:   24,
-	}
-	op := &text.DrawOptions{}
-	op.GeoM.Translate(0, 0)
-	text.Draw(screen, "Conway's Game of Life", face, op)
+	//fontSource, err := text.NewGoTextFaceSource(bytes.NewReader(gomono.TTF))
+	//if err != nil {
+	//	panic(err)
+	//}
+	//face := &text.GoTextFace{
+	//	Source: fontSource,
+	//	Size:   24,
+	//}
+	//op := &text.DrawOptions{}
+	//op.GeoM.Translate(0, 0)
+	//text.Draw(screen, "Conway's Game of Life", face, op)
 }
 
-func (game *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return outsideWidth, outsideHeight
 }
 
 func NewRandom(sizeX, sizeY int) *GameOfLife {
-	universe := New()
+	universe := newUniverse()
 	for x := 0; x < sizeX; x++ {
 		for y := 0; y < sizeY; y++ {
 			if rand.Intn(2) == 1 {

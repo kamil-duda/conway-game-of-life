@@ -23,15 +23,15 @@ func newCanvas(x, y int) *gameCanvas {
 }
 
 // TODO: tests
-func (canvas *gameCanvas) clear() {
-	canvas.image.Clear()
+func (c *gameCanvas) clear() {
+	c.image.Clear()
 }
 
 // TODO: tests
-func (canvas *gameCanvas) drawOnto(screen *ebiten.Image) {
-	screen.DrawImage(canvas.image, canvas.options)
+func (c *gameCanvas) drawOnto(screen *ebiten.Image) {
+	screen.DrawImage(c.image, c.options)
 }
 
-func (canvas *gameCanvas) pixel(x, y int) {
-	draw.Pixel(x, y, canvas.image)
+func (c *gameCanvas) pixel(x, y int) {
+	draw.Pixel(x, y, c.image)
 }

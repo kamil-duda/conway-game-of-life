@@ -1,5 +1,5 @@
 package game
 
-type Cell struct {
+type cell struct {
 	x, y int
 }
