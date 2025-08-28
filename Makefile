@@ -1,6 +1,9 @@
 mod:
 	go mod tidy
-	go mod vendor
+
+update:
+	go get -u
+	make mod
 
 run:
 	go run .
@@ -14,8 +17,9 @@ bench:
 	# -v (verbose)
 	# -bench . (run all found benchmarks)
 	# -benchmem (show memory allocation stats)
+	# -run ^$$ (run no unit tests - only benchmarks)
 	# ./... (look for benchmarks in all directories)
-	go test -v -bench . -benchmem ./...
+	go test -v -bench . -benchmem -run ^$$ ./...
 
 coverage:
 	go test ./... \
@@ -28,3 +32,4 @@ coverage:
 		-o coverage.html
 	rm coverage.out
 	open coverage.html
+

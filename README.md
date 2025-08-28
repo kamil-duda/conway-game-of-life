@@ -5,10 +5,11 @@
 Project uses Makefile for common development tasks.
 Available commands:
 
-- `make mod` - Go mod tidy and vendor
+- `make mod` - Go mod tidy
+- `make update` - Update dependencies
 - `make run` - Run the application
 - `make test` - Run all tests
-- `make bench` - Run all tests and benchmarks
+- `make bench` - Run all benchmarks
 - `make coverage` - Generate test coverage report
 
 ## Project Management

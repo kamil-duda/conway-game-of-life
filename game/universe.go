@@ -5,66 +5,66 @@ import (
 	"maps"
 )
 
-type cells = map[uint64]Cell
+type cells = map[uint64]cell
 
-type Universe struct {
+type universe struct {
 	liveCells cells
 }
 
-func New(cellz ...Cell) *Universe {
-	u := &Universe{make(cells)}
+func newUniverse(cellz ...cell) *universe {
+	u := &universe{make(cells)}
 	for _, cell := range cellz {
 		u.setLive(cell.x, cell.y)
 	}
 	return u
 }
 
-func (universe *Universe) isLive(x, y int) bool {
+func (u *universe) isLive(x, y int) bool {
 	key := toKey(x, y)
-	_, exists := universe.liveCells[key]
+	_, exists := u.liveCells[key]
 	return exists
 }
 
-func (universe *Universe) setLive(x, y int) {
+func (u *universe) setLive(x, y int) {
 	key := toKey(x, y)
-	universe.liveCells[key] = Cell{x, y}
+	u.liveCells[key] = cell{x, y}
 }
 
-func (universe *Universe) setDead(x, y int) {
-	delete(universe.liveCells, toKey(x, y))
+func (u *universe) setDead(x, y int) {
+	delete(u.liveCells, toKey(x, y))
 }
 
-func (universe *Universe) liveNeighbours(x, y int) (count uint8) {
+func (u *universe) liveNeighbours(x, y int) (count uint8) {
 	// NW
-	if universe.isLive(x-1, y-1) {
+	if u.isLive(x-1, y-1) {
 		count++
 	}
 	// W
-	if universe.isLive(x-1, y) {
+	if u.isLive(x-1, y) {
 		count++
 	}
 	// SW
-	if universe.isLive(x-1, y+1) {
+	if u.isLive(x-1, y+1) {
 		count++
 	}
 	// NE
-	if universe.isLive(x+1, y-1) {
+	if u.isLive(x+1, y-1) {
 		count++
 	}
 	// E
-	if universe.isLive(x+1, y) {
+	if u.isLive(x+1, y) {
 		count++
 	}
 	// SE
-	if universe.isLive(x+1, y+1) {
+	if u.isLive(x+1, y+1) {
 		count++
 	}
 	// N
-	if universe.isLive(x, y-1) {
+	if u.isLive(x, y-1) {
 		count++
 	}
 	// S
-	if universe.isLive(x, y+1) {
+	if u.isLive(x, y+1) {
 		count++
 	}
 	return count
@@ -74,10 +74,10 @@ func toKey(x, y int) uint64 {
 	return uint64(uint32(x))<<32 | uint64(uint32(y))
 }
 
-func (universe *Universe) cellsIter() iter.Seq[Cell] {
-	return maps.Values(universe.liveCells)
+func (u *universe) cellsIter() iter.Seq[cell] {
+	return maps.Values(u.liveCells)
 }
 
-func (universe *Universe) clone() *Universe {
-	return &Universe{maps.Clone(universe.liveCells)}
+func (u *universe) clone() *universe {
+	return &universe{maps.Clone(u.liveCells)}
 }
