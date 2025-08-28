@@ -40,21 +40,9 @@ func (g *GameOfLife) Update() error {
 func (g *GameOfLife) Draw(screen *ebiten.Image) {
 	g.canvas.clear()
 	for cell := range g.universe.cellsIter() {
-		g.canvas.pixel(cell.x, cell.y)
+		g.canvas.draw(cell)
 	}
 	g.canvas.drawOnto(screen)
-
-	//fontSource, err := text.NewGoTextFaceSource(bytes.NewReader(gomono.TTF))
-	//if err != nil {
-	//	panic(err)
-	//}
-	//face := &text.GoTextFace{
-	//	Source: fontSource,
-	//	Size:   24,
-	//}
-	//op := &text.DrawOptions{}
-	//op.GeoM.Translate(0, 0)
-	//text.Draw(screen, "Conway's Game of Life", face, op)
 }
 
 func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
