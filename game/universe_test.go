@@ -230,8 +230,8 @@ func TestCellsIter(t *testing.T) {
 		}},
 		{"universe is empty", []cell{}},
 	}
-	t.Parallel()
 
+	t.Parallel()
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
