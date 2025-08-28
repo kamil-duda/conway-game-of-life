@@ -12,7 +12,17 @@ func Pixel(x int, y int, screen *ebiten.Image) {
 }
 
 func Text() {
-
+	//fontSource, err := text.NewGoTextFaceSource(bytes.NewReader(gomono.TTF))
+	//if err != nil {
+	//	panic(err)
+	//}
+	//face := &text.GoTextFace{
+	//	Source: fontSource,
+	//	Size:   24,
+	//}
+	//op := &text.DrawOptions{}
+	//op.GeoM.Translate(0, 0)
+	//text.Draw(screen, "Conway's Game of Life", face, op)
 }
 
 func DebugBackground(screen *ebiten.Image) {
