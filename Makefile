@@ -17,8 +17,9 @@ bench:
 	# -v (verbose)
 	# -bench . (run all found benchmarks)
 	# -benchmem (show memory allocation stats)
+	# -run ^$$ (run no unit tests - only benchmarks)
 	# ./... (look for benchmarks in all directories)
-	go test -v -bench . -benchmem ./...
+	go test -v -bench . -benchmem -run ^$$ ./...
 
 coverage:
 	go test ./... \

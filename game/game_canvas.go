@@ -11,27 +11,23 @@ type gameCanvas struct {
 	options *ebiten.DrawImageOptions
 }
 
-// TODO: tests
 func newCanvas(x, y int) *gameCanvas {
 	image := ebiten.NewImage(x, y)
-	imageOptions := &ebiten.DrawImageOptions{}
+	options := &ebiten.DrawImageOptions{}
 	scaleX := float64(config.Width) / float64(image.Bounds().Dx())
 	scaleY := float64(config.Height) / float64(image.Bounds().Dy())
-	imageOptions.GeoM.Scale(scaleX, scaleY)
-
-	return &gameCanvas{image, imageOptions}
+	options.GeoM.Scale(scaleX, scaleY)
+	return &gameCanvas{image, options}
 }
 
-// TODO: tests
-func (c *gameCanvas) clear() {
-	c.image.Clear()
+func (gc *gameCanvas) clear() {
+	gc.image.Clear()
 }
 
-// TODO: tests
-func (c *gameCanvas) drawOnto(screen *ebiten.Image) {
-	screen.DrawImage(c.image, c.options)
+func (gc *gameCanvas) drawOnto(screen *ebiten.Image) {
+	screen.DrawImage(gc.image, gc.options)
 }
 
-func (c *gameCanvas) pixel(x, y int) {
-	draw.Pixel(x, y, c.image)
+func (gc *gameCanvas) draw(c cell) {
+	draw.Pixel(c.x, c.y, gc.image)
 }
