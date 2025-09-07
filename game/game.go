@@ -10,9 +10,12 @@ import (
 )
 
 type GameOfLife struct {
-	universe   *universe
-	canvas     *gameCanvas
-	fpsCounter *fpsCounter
+	universe         *universe
+	canvas           *gameCanvas
+	fpsCounter       *fpsCounter
+	simSpeedCounter  *fpsCounter
+	fpsRenderer      *draw.FpsRenderer
+	simSpeedRenderer *draw.SimSpeedRenderer
 }
 
 func (g *GameOfLife) Update() error {
@@ -32,6 +35,7 @@ func (g *GameOfLife) Update() error {
 		}
 	}
 	g.universe = nextUniverse
+	g.simSpeedCounter.tick()
 	return nil
 }
 
@@ -41,7 +45,8 @@ func (g *GameOfLife) Draw(screen *ebiten.Image) {
 		g.canvas.draw(cell)
 	}
 	g.canvas.drawOnto(screen)
-	draw.Fps(g.fpsCounter.fps, screen)
+	g.fpsRenderer.Draw(g.fpsCounter.fps, screen)
+	g.simSpeedRenderer.Draw(g.simSpeedCounter.fps, screen)
 	g.fpsCounter.tick()
 }
 
@@ -49,7 +54,7 @@ func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, scree
 	return outsideWidth, outsideHeight
 }
 
-func NewRandom(sizeX, sizeY int) *GameOfLife {
+func NewRandomGame(sizeX, sizeY int) *GameOfLife {
 	universe := newUniverse()
 	for x := 0; x < sizeX; x++ {
 		for y := 0; y < sizeY; y++ {
@@ -59,5 +64,12 @@ func NewRandom(sizeX, sizeY int) *GameOfLife {
 		}
 	}
 	gameBuffer := newCanvas(sizeX, sizeY)
-	return &GameOfLife{universe, gameBuffer, &fpsCounter{}}
+	return &GameOfLife{
+		universe,
+		gameBuffer,
+		&fpsCounter{},
+		&fpsCounter{},
+		draw.NewFpsRenderer(),
+		draw.NewSimSpeedRenderer(),
+	}
 }
