@@ -6,15 +6,13 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kamil-duda/conway-game-of-life/config"
 	"github.com/kamil-duda/conway-game-of-life/conway"
+	"github.com/kamil-duda/conway-game-of-life/draw"
 )
 
 type GameOfLife struct {
-	universe *universe
-	canvas   *gameCanvas
-}
-
-type fpsCounter struct {
-	frames uint
+	universe   *universe
+	canvas     *gameCanvas
+	fpsCounter *fpsCounter
 }
 
 func (g *GameOfLife) Update() error {
@@ -43,6 +41,8 @@ func (g *GameOfLife) Draw(screen *ebiten.Image) {
 		g.canvas.draw(cell)
 	}
 	g.canvas.drawOnto(screen)
+	draw.Fps(g.fpsCounter.fps, screen)
+	g.fpsCounter.tick()
 }
 
 func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -59,5 +59,5 @@ func NewRandom(sizeX, sizeY int) *GameOfLife {
 		}
 	}
 	gameBuffer := newCanvas(sizeX, sizeY)
-	return &GameOfLife{universe, gameBuffer}
+	return &GameOfLife{universe, gameBuffer, &fpsCounter{}}
 }
