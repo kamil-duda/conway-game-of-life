@@ -31,6 +31,8 @@ func (g *GameOfLife) Update() error {
 		}
 	}
 	g.universe = nextUniverse
+	g.performanceMonitor.setPopulationCount(nextUniverse.population())
+	g.performanceMonitor.tickGeneration()
 	g.performanceMonitor.simSpeedTick()
 	return nil
 }
