@@ -6,17 +6,18 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kamil-duda/conway-game-of-life/config"
 	"github.com/kamil-duda/conway-game-of-life/conway"
-	"github.com/kamil-duda/conway-game-of-life/draw"
 )
 
 type GameOfLife struct {
-	universe *Universe
+	universe           *universe
+	canvas             *gameCanvas
+	performanceMonitor *performanceMonitor
 }
 
 func (g *GameOfLife) Update() error {
 	nextUniverse := g.universe.clone()
 	for x := 0; x < config.LogicalWidth; x++ {
-		for y := 0; y < config.Height; y++ {
+		for y := 0; y < config.LogicalHeight; y++ {
 			neighbours := g.universe.liveNeighbours(x, y)
 			if g.universe.isLive(x, y) {
 				if !conway.LiveCellSurvives(neighbours) {
@@ -30,22 +31,26 @@ func (g *GameOfLife) Update() error {
 		}
 	}
 	g.universe = nextUniverse
+	g.performanceMonitor.simSpeedTick()
 	return nil
 }
 
 func (g *GameOfLife) Draw(screen *ebiten.Image) {
+	g.canvas.clear()
 	for cell := range g.universe.cellsIter() {
-		draw.Pixel(cell.x, cell.y, screen)
+		g.canvas.draw(cell)
 	}
-	draw.DebugBackground(screen)
+	g.canvas.drawOnto(screen)
+	g.performanceMonitor.draw(screen)
+	g.performanceMonitor.fpsTick()
 }
 
 func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return config.LogicalWidth, config.LogicalHeight
+	return outsideWidth, outsideHeight
 }
 
-func NewRandom(sizeX, sizeY int) *GameOfLife {
-	universe := New()
+func NewRandomGame(sizeX, sizeY int) *GameOfLife {
+	universe := newUniverse()
 	for x := 0; x < sizeX; x++ {
 		for y := 0; y < sizeY; y++ {
 			if rand.Intn(2) == 1 {
@@ -53,5 +58,10 @@ func NewRandom(sizeX, sizeY int) *GameOfLife {
 			}
 		}
 	}
-	return &GameOfLife{universe}
+	gameBuffer := newCanvas(sizeX, sizeY)
+	return &GameOfLife{
+		universe,
+		gameBuffer,
+		newPerformanceMonitor(),
+	}
 }

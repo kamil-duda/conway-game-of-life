@@ -5,17 +5,19 @@
 Project uses Makefile for common development tasks.
 Available commands:
 
-- `make mod` - Go mod tidy and vendor
+- `make mod` - Go mod tidy
+- `make update` - Update dependencies
 - `make run` - Run the application
 - `make test` - Run all tests
-- `make bench` - Run all tests and benchmarks
-- `make coverage` - Generate test coverage report
+- `make bench` - Run all benchmarks
+- `make coverage` - Generate and open test coverage report
 
 ## Project Management
 
 Project management using GitHub Projects
+
 * [Conway's Game of Life - GitHub Project](https://github.com/users/kamil-duda/projects/2)
-* [GitHub Issues](https://github.com/kamil-duda/conway-game-of-life/issues) 
+* [GitHub Issues](https://github.com/kamil-duda/conway-game-of-life/issues)
 
 ## Resources
 
