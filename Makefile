@@ -22,7 +22,7 @@ bench:
 	go test -v -bench . -benchmem -run ^$$ ./...
 
 coverage:
-	go test ./... \
+	go test -v ./... \
 		-coverpkg=./... \
 		-covermode=atomic \
 		-coverprofile=coverage.out \
@@ -32,4 +32,3 @@ coverage:
 		-o coverage.html
 	rm coverage.out
 	open coverage.html
-

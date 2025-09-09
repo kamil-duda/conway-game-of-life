@@ -10,7 +10,7 @@ Available commands:
 - `make run` - Run the application
 - `make test` - Run all tests
 - `make bench` - Run all benchmarks
-- `make coverage` - Generate test coverage report
+- `make coverage` - Generate and open test coverage report
 
 ## Project Management
 
@@ -23,12 +23,3 @@ Project management using GitHub Projects
 
 - [Ebitengine - Cheat Sheet](https://ebitengine.org/en/documents/cheatsheet.html)
 - [Ebitengine - Package Documentation](https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2)
-
-## To do
-
-1. CountRenderer that can print value with predefined label
-    1. Contains *textRenderer
-2. PerformanceMonitor
-    1. Stores FPS and UPS counters
-    2. Used by Game
-    3. Contains renderers and is able to render itself onto the screen

@@ -8,8 +8,8 @@ import (
 type performanceMonitor struct {
 	fpsCounter       *rateCounter
 	simSpeedCounter  *rateCounter
-	fpsRenderer      *draw.FpsRenderer
-	simSpeedRenderer *draw.SimSpeedRenderer
+	fpsRenderer      *draw.MetricRenderer
+	simSpeedRenderer *draw.MetricRenderer
 }
 
 func newPerformanceMonitor() *performanceMonitor {
@@ -31,5 +31,5 @@ func (p *performanceMonitor) simSpeedTick() {
 
 func (p *performanceMonitor) draw(screen *ebiten.Image) {
 	p.fpsRenderer.Draw(p.fpsCounter.rate, screen)
-	p.simSpeedRenderer.Draw(p.fpsCounter.rate, screen)
+	p.simSpeedRenderer.Draw(p.simSpeedCounter.rate, screen)
 }
