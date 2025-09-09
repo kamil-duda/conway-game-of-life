@@ -24,6 +24,36 @@ func TestNewUniverseEmpty(t *testing.T) {
 	}
 }
 
+var populationCases = []struct {
+	name     string
+	universe *universe
+	want     int
+}{
+	{"empty universe", newUniverse(), 0},
+	{"non-empty universe", newUniverse(
+		cell{-1, -1},
+		cell{-1, 0},
+		cell{-1, 1},
+		cell{0, 1},
+		cell{0, -1},
+		cell{1, 0},
+		cell{1, 1},
+		cell{1, -1},
+	), 8},
+}
+
+func TestPopulation(t *testing.T) {
+	t.Parallel()
+	for _, tt := range populationCases {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.universe.population()
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 func TestNewUniverseSetLive(t *testing.T) {
 	t.Parallel()
 	u := newUniverse()
@@ -360,5 +390,21 @@ func BenchmarkClone(b *testing.B) {
 	)
 	for b.Loop() {
 		u.clone()
+	}
+}
+
+func BenchmarkPopulation(b *testing.B) {
+	u := newUniverse(
+		cell{-1, -1},
+		cell{-1, 0},
+		cell{-1, 1},
+		cell{0, 1},
+		cell{0, -1},
+		cell{1, 0},
+		cell{1, 1},
+		cell{1, -1},
+	)
+	for b.Loop() {
+		u.population()
 	}
 }

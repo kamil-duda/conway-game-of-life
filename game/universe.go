@@ -70,6 +70,10 @@ func (u *universe) liveNeighbours(x, y int) (count uint8) {
 	return count
 }
 
+func (u *universe) population() int {
+	return len(u.liveCells)
+}
+
 func toKey(x, y int) uint64 {
 	return uint64(uint32(x))<<32 | uint64(uint32(y))
 }

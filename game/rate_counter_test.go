@@ -11,12 +11,12 @@ func TestFreshRateCounter(t *testing.T) {
 	counter := rateCounter{}
 
 	gotTicks := counter.ticks
-	wantTicks := uint(0)
+	wantTicks := 0
 	if gotTicks != wantTicks {
 		t.Errorf("rateCounter.ticks = %d, want %d", gotTicks, wantTicks)
 	}
 	gotRate := counter.rate
-	wantRate := uint(0)
+	wantRate := 0
 	if gotRate != wantRate {
 		t.Errorf("rateCounter.rate = %d, want %d", gotRate, wantRate)
 	}
@@ -28,12 +28,12 @@ func TestFreshSingleTick(t *testing.T) {
 	counter.tick()
 
 	gotTicks := counter.ticks
-	wantTicks := uint(1)
+	wantTicks := 1
 	if gotTicks != wantTicks {
 		t.Errorf("rateCounter.ticks = %d, want %d", gotTicks, wantTicks)
 	}
 	gotRate := counter.rate
-	wantRate := uint(0)
+	wantRate := 0
 	if gotRate != wantRate {
 		t.Errorf("rateCounter.rate = %d, want %d", gotRate, wantRate)
 	}
@@ -46,12 +46,12 @@ func TestFreshTwoTicks(t *testing.T) {
 	counter.tick()
 
 	gotTicks := counter.ticks
-	wantTicks := uint(2)
+	wantTicks := 2
 	if gotTicks != wantTicks {
 		t.Errorf("rateCounter.ticks = %d, want %d", gotTicks, wantTicks)
 	}
 	gotRate := counter.rate
-	wantRate := uint(0)
+	wantRate := 0
 	if gotRate != wantRate {
 		t.Errorf("rateCounter.rate = %d, want %d", gotRate, wantRate)
 	}
@@ -71,9 +71,9 @@ func Test1Second60Rate(t *testing.T) {
 		counter.tick()
 
 		gotTicks := counter.ticks
-		wantTicks := uint(1)
+		wantTicks := 1
 		gotRate := counter.rate
-		wantRate := uint(60)
+		wantRate := 60
 
 		// 1 new frame
 		if gotTicks != wantTicks {
@@ -105,9 +105,9 @@ func Test2Seconds60Rate(t *testing.T) {
 		counter.tick()
 
 		gotTicks := counter.ticks
-		wantTicks := uint(1)
+		wantTicks := 1
 		gotRate := counter.rate
-		wantRate := uint(60)
+		wantRate := 60
 
 		// 1 new frame
 		if gotTicks != wantTicks {
@@ -132,9 +132,9 @@ func TestLessThan1Rate(t *testing.T) {
 		counter.tick()
 
 		gotTicks := counter.ticks
-		wantTicks := uint(1)
+		wantTicks := 1
 		gotRate := counter.rate
-		wantRate := uint(0)
+		wantRate := 0
 
 		// 1 new frame
 		if gotTicks != wantTicks {

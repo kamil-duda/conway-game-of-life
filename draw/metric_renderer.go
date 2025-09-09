@@ -11,7 +11,7 @@ type MetricRenderer struct {
 	label string
 }
 
-func (r *MetricRenderer) Draw(value uint, screen *ebiten.Image) {
+func (r *MetricRenderer) Draw(value int, screen *ebiten.Image) {
 	r.draw(fmt.Sprintf("%s%d", r.label, value), screen)
 }
 
@@ -21,4 +21,12 @@ func NewFpsRenderer() *MetricRenderer {
 
 func NewSimSpeedRenderer() *MetricRenderer {
 	return &MetricRenderer{newTextRenderer(24, 200, 0), "UPS: "}
+}
+
+func NewGenerationRenderer() *MetricRenderer {
+	return &MetricRenderer{newTextRenderer(24, 400, 0), "Gen: "}
+}
+
+func NewPopulationRenderer() *MetricRenderer {
+	return &MetricRenderer{newTextRenderer(24, 600, 0), "Pop: "}
 }
