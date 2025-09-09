@@ -6,9 +6,9 @@ import "time"
 // rateCounter tracks and calculates rate of events (like frames per second)
 // by counting ticks over time periods.
 type rateCounter struct {
-	ticks           uint
+	ticks           int
 	lastCalculation time.Time
-	rate            uint
+	rate            int
 }
 
 // tick registers a new event and updates the rate if enough time has passed.
