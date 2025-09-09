@@ -8,21 +8,21 @@ type fpsCounter struct {
 	fps             uint
 }
 
-func (fps *fpsCounter) tick() {
+func (f *fpsCounter) tick() {
 	resetCounters := func() {
-		fps.frames = 0
-		fps.lastCalculation = time.Now()
+		f.frames = 0
+		f.lastCalculation = time.Now()
 	}
 
 	// if more than 1 second passed - calculate fps with current values, do not add a new frame now
-	switch intervalSeconds := time.Since(fps.lastCalculation).Seconds(); {
-	case intervalSeconds >= 2:
-		fps.fps = 0
+	switch interval := time.Since(f.lastCalculation); {
+	case interval >= time.Second*2:
+		f.fps = 0
 		resetCounters()
-	case intervalSeconds >= 1:
-		fps.fps = fps.frames
+	case interval >= time.Second:
+		f.fps = f.frames
 		resetCounters()
 	}
 	// add a new frame only after calculations are done
-	fps.frames++
+	f.frames++
 }
