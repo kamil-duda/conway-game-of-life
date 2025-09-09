@@ -6,16 +6,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/kamil-duda/conway-game-of-life/config"
 	"github.com/kamil-duda/conway-game-of-life/conway"
-	"github.com/kamil-duda/conway-game-of-life/draw"
 )
 
 type GameOfLife struct {
-	universe         *universe
-	canvas           *gameCanvas
-	fpsCounter       *fpsCounter
-	simSpeedCounter  *fpsCounter
-	fpsRenderer      *draw.FpsRenderer
-	simSpeedRenderer *draw.SimSpeedRenderer
+	universe           *universe
+	canvas             *gameCanvas
+	performanceMonitor *performanceMonitor
 }
 
 func (g *GameOfLife) Update() error {
@@ -35,7 +31,7 @@ func (g *GameOfLife) Update() error {
 		}
 	}
 	g.universe = nextUniverse
-	g.simSpeedCounter.tick()
+	g.performanceMonitor.simSpeedTick()
 	return nil
 }
 
@@ -45,9 +41,8 @@ func (g *GameOfLife) Draw(screen *ebiten.Image) {
 		g.canvas.draw(cell)
 	}
 	g.canvas.drawOnto(screen)
-	g.fpsRenderer.Draw(g.fpsCounter.fps, screen)
-	g.simSpeedRenderer.Draw(g.simSpeedCounter.fps, screen)
-	g.fpsCounter.tick()
+	g.performanceMonitor.draw(screen)
+	g.performanceMonitor.fpsTick()
 }
 
 func (g *GameOfLife) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -67,9 +62,6 @@ func NewRandomGame(sizeX, sizeY int) *GameOfLife {
 	return &GameOfLife{
 		universe,
 		gameBuffer,
-		&fpsCounter{},
-		&fpsCounter{},
-		draw.NewFpsRenderer(),
-		draw.NewSimSpeedRenderer(),
+		newPerformanceMonitor(),
 	}
 }
