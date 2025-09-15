@@ -75,7 +75,7 @@ func BenchmarkCanvasDraw(b *testing.B) {
 
 func BenchmarkCanvasDrawOnto(b *testing.B) {
 	canvas := newCanvas(100, 100)
-	screen := ebiten.NewImage(config.Width, config.Height)
+	screen := ebiten.NewImage(config.InitWindowWidth, config.InitWindowHeight)
 	for i := 0; i < 10; i++ {
 		canvas.draw(cell{i, i})
 	}
