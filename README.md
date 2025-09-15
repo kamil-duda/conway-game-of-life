@@ -12,6 +12,10 @@ Available commands:
 - `make bench` - Run all benchmarks
 - `make coverage` - Generate and open test coverage report
 
+### Dependencies
+- [Ebitengine](https://ebitengine.org/)
+- [Ebiten UI](https://ebitenui.github.io/)
+
 ## Project Management
 
 Project management using GitHub Projects
